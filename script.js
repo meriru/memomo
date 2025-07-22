@@ -109,21 +109,14 @@ function downloadZip() {
   keys.forEach(key => {
     const memo = JSON.parse(localStorage.getItem(key));
     const title = memo.title.replace(/[\\/:*?"<>|]/g, '_') || 'untitled';
-    const html = `
-<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><title>${title}</title></head><body>
-<h1>${memo.title}</h1><pre>${memo.content}</pre>
-<p>タグ: ${(memo.tags || []).join(', ')}</p>
-<p>作成: ${new Date(memo.createdAt).toLocaleString()}</p>
-<p>更新: ${new Date(memo.updatedAt).toLocaleString()}</p>
-</body></html>
-    `;
-    zip.file(`${title}.html`, html);
+    const text = memo.content || '';
+    zip.file(`${title}.txt`, text);
   });
 
   zip.generateAsync({ type: 'blob' }).then(blob => {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'memos.zip';
+    a.download = 'memos_txt_only.zip';
     a.click();
     URL.revokeObjectURL(a.href);
   });
