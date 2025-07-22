@@ -147,5 +147,20 @@ button:hover {
   }
   #sidebar.show, #editor.show {
     display: block;
+    height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+  .memo-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px;
+  }
+  .memo-entry button {
+    font-size: 18px;
+    margin-left: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
   }
 }
