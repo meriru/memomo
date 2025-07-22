@@ -4,6 +4,7 @@ let autosaveTimeout = null;
 function loadMemoList(filter = '') {
   const memoList = document.getElementById('memoList');
   memoList.innerHTML = '';
+
   const keys = Object.keys(localStorage).filter(k => k.startsWith('memo_'));
   keys.sort((a, b) => {
     const aObj = JSON.parse(localStorage.getItem(a));
@@ -13,8 +14,11 @@ function loadMemoList(filter = '') {
 
   for (const key of keys) {
     const memo = JSON.parse(localStorage.getItem(key));
-    const text = (memo.title + memo.content + (memo.tags || [])).toLowerCase();
+    const text = (memo.title + memo.content + (memo.tags || []).join('')).toLowerCase();
+
     if (filter && !text.includes(filter.toLowerCase())) continue;
+
+    // ↓省略：ここにメモ表示コード（loadMemoListの中身続ける）
 
     const li = document.createElement('li');
     li.classList.add('memo-entry');
@@ -38,6 +42,7 @@ function loadMemoList(filter = '') {
         memo.updatedAt = new Date().toISOString();
         localStorage.setItem(key, JSON.stringify(memo));
         loadMemoList();
+        loadTagList();
       }
     };
 
@@ -49,6 +54,7 @@ function loadMemoList(filter = '') {
       if (confirm('本当に削除しますか？')) {
         localStorage.removeItem(key);
         loadMemoList();
+        loadTagList();
         clearEditor();
       }
     };
@@ -102,6 +108,7 @@ function saveMemo(isAutoSave = false) {
   } else {
     showAutoSaveMsg('自動保存しました');
     loadMemoList();
+    loadTagList();
   }
 }
 
@@ -126,6 +133,7 @@ function deleteMemo() {
     selectedKey = null;
     clearEditor();
     loadMemoList();
+    loadTagList();
   }
 }
 
@@ -191,6 +199,7 @@ window.onload = () => {
     loadMemoList(e.target.value);
   });
   loadMemoList();
+  loadTagList();
 };
 
 // モバイル用切り替えボタン処理
@@ -219,3 +228,52 @@ if (window.innerWidth <= 600) {
 
 btnList.addEventListener('click', showList);
 btnEdit.addEventListener('click', showEdit);
+
+document.getElementById('addMemoBtn').onclick = () => {
+  clearEditor();  // 入力欄をリセットし新規作成モードへ
+  if (window.innerWidth <= 600) showEdit(); // スマホなら自動で編集画面へ
+};
+
+// "新規メモ" ボタンが押された時の処理
+document.getElementById('addMemoBtnEditor').onclick = () => {
+  clearEditor();       // 入力欄をクリアして
+  if (window.innerWidth <= 600) {
+    showEdit();        // モバイルなら編集画面を表示
+  }
+  selectedKey = null;  // 新規メモ状態に切替え
+};
+
+// すべてのメモ内のタグを走査して一覧生成
+function loadTagList() {
+  const tagList = document.getElementById('tagList');
+  tagList.innerHTML = '<strong>タグ:</strong> ';
+
+  const allTags = new Set();
+
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('memo_'));
+  keys.forEach(key => {
+    const memo = JSON.parse(localStorage.getItem(key));
+    (memo.tags || []).forEach(tag => {
+      if (tag) allTags.add(tag);
+    });
+  });
+
+  Array.from(allTags).sort().forEach(tag => {
+    const btn = document.createElement('button');
+    btn.textContent = `#${tag}`;
+    btn.className = 'tag-btn';
+    btn.onclick = () => {
+      loadMemoList(tag); // タグ名でフィルタ検索
+    };
+    tagList.appendChild(btn);
+  });
+
+  const resetBtn = document.createElement('button');
+  resetBtn.textContent = '🔄 すべて表示';
+  resetBtn.className = 'tag-btn';
+  resetBtn.onclick = () => {
+    loadMemoList(); // 全メモ再表示
+    loadTagList();
+  };
+  tagList.appendChild(resetBtn);
+}
