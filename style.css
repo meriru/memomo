@@ -143,12 +143,59 @@ button:hover {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  color: #333;
   background-color: #ddd;
   transition: background-color 0.3s;
 }
+body.dark .mobile-toggle button {
+  color: #333 !important;  /* ← ダークでも読みやすく */
+  background-color: #bbb;
+}
 .mobile-toggle button.active {
+  color: var(--bg-color) !important;
   background-color: var(--text-color);
-  color: var(--bg-color);
+  font-weight: bold;
+}
+
+#addMemoBtn {
+  margin-bottom: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #42a5f5;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+#addMemoBtn:hover {
+  background: #1976d2;
+}
+body.dark #addMemoBtn {
+  background: #1976d2;
+  color: #fff;
+}
+
+#tagList {
+  margin: 10px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tag-btn {
+  font-size: 14px;
+  background: #eee;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+body.dark .tag-btn {
+  background: #444;
+  color: #ddd;
+}
+.tag-btn:hover {
+  background: #ccc;
 }
 
 @media (max-width: 600px) {
