@@ -1,5 +1,5 @@
 # memo-app メモ帳アプリ（自動保存対応）
-https://reamemo.github.io/memomo/
+https://meriru.github.io/memomo/
 
 練習用にお試しで作ってみたメモ帳アプリです。  
 データはブラウザ内に保存されるため、外部に送信されることはありません。  
