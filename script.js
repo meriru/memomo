@@ -147,3 +147,30 @@ window.onload = () => {
   });
   loadMemoList();
 };
+
+// モバイル用切り替えボタン処理
+const btnList = document.getElementById('btnList');
+const btnEdit = document.getElementById('btnEdit');
+const sidebar = document.getElementById('sidebar');
+const editor = document.getElementById('editor');
+
+function showList() {
+  sidebar.classList.add('show');
+  editor.classList.remove('show');
+  btnList.classList.add('active');
+  btnEdit.classList.remove('active');
+}
+function showEdit() {
+  sidebar.classList.remove('show');
+  editor.classList.add('show');
+  btnList.classList.remove('active');
+  btnEdit.classList.add('active');
+}
+
+// 初期表示（縦画面用のみ）
+if (window.innerWidth <= 600) {
+  showEdit();
+}
+
+btnList.addEventListener('click', showList);
+btnEdit.addEventListener('click', showEdit);
