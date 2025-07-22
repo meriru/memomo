@@ -17,8 +17,45 @@ function loadMemoList(filter = '') {
     if (filter && !text.includes(filter.toLowerCase())) continue;
 
     const li = document.createElement('li');
-    li.textContent = memo.title || '(無題)';
-    li.onclick = () => loadMemo(key);
+    li.classList.add('memo-entry');
+
+    const title = document.createElement('span');
+    title.textContent = memo.title || '(無題)';
+    title.className = 'memo-title';
+    title.onclick = () => {
+      loadMemo(key);
+      if (window.innerWidth <= 600) showEdit(); // モバイルなら編集へ自動切替
+    };
+
+    const renameBtn = document.createElement('button');
+    renameBtn.textContent = '✏️';
+    renameBtn.title = 'タイトル変更';
+    renameBtn.onclick = (e) => {
+      e.stopPropagation();
+      const newTitle = prompt('新しいタイトルを入力：', memo.title);
+      if (newTitle !== null && newTitle.trim()) {
+        memo.title = newTitle.trim();
+        memo.updatedAt = new Date().toISOString();
+        localStorage.setItem(key, JSON.stringify(memo));
+        loadMemoList();
+      }
+    };
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = '🗑️';
+    deleteBtn.title = '削除';
+    deleteBtn.onclick = (e) => {
+      e.stopPropagation();
+      if (confirm('本当に削除しますか？')) {
+        localStorage.removeItem(key);
+        loadMemoList();
+        clearEditor();
+      }
+    };
+
+    li.appendChild(title);
+    li.appendChild(renameBtn);
+    li.appendChild(deleteBtn);
     memoList.appendChild(li);
   }
 }
@@ -39,10 +76,7 @@ function saveMemo(isAutoSave = false) {
     return;
   }
 
-  // 空入力時の自動保存はスキップ（ただし削除時は別ロジック）
-  if (!title && !content && isAutoSave) {
-    return;
-  }
+  if (!title && !content && isAutoSave) return;
 
   const key = selectedKey || `memo_${Date.now()}`;
   const memo = {
@@ -54,14 +88,18 @@ function saveMemo(isAutoSave = false) {
   };
 
   localStorage.setItem(key, JSON.stringify(memo));
+
   if (!isAutoSave) {
     selectedKey = null;
     clearEditor();
     loadMemoList();
     alert('保存しました！');
+
+    // ✅ ＜ここ＞スマホなら保存後に一覧へ戻る
+    if (window.innerWidth <= 600) showList();
   } else {
     showAutoSaveMsg('自動保存しました');
-    loadMemoList(); // リストにも即反映
+    loadMemoList();
   }
 }
 
@@ -95,6 +133,11 @@ function clearEditor() {
   document.getElementById('tagInput').value = '';
   document.getElementById('timestamp').textContent = '';
   clearAutoSaveMsg();
+
+  selectedKey = null;
+
+  // ✅ スマホなら編集画面に切替え
+  if (window.innerWidth <= 600) showEdit();
 }
 
 function toggleTheme() {
