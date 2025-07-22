@@ -277,3 +277,44 @@ function loadTagList() {
   };
   tagList.appendChild(resetBtn);
 }
+
+// 共有リンクの生成ロジック（script.js例）
+document.getElementById('shareMemoBtn').onclick = () => {
+  const title = encodeURIComponent(document.getElementById('titleInput').value);
+  const content = encodeURIComponent(document.getElementById('contentInput').value);
+  const tags = encodeURIComponent(document.getElementById('tagInput').value);
+
+  const params = `?title=${title}&content=${content}&tags=${tags}`;
+  const url = location.origin + location.pathname + params;
+
+  // 生成したURLをクリップボードにコピーして通知
+  navigator.clipboard.writeText(url).then(() => {
+    alert('共有リンクをクリップボードにコピーしました！\n他の端末で、URLを開くとこのメモ内容が表示されます。');
+  });
+};
+
+// 共有リンクの生成ロジック（script.js例）
+window.onload = () => {
+  // URLパラメータの取得
+  const params = new URLSearchParams(location.search);
+  if (params.has('title') || params.has('content') || params.has('tags')) {
+    document.getElementById('titleInput').value = decodeURIComponent(params.get('title') || '');
+    document.getElementById('contentInput').value = decodeURIComponent(params.get('content') || '');
+    document.getElementById('tagInput').value = decodeURIComponent(params.get('tags') || '');
+  }
+  loadMemoList();
+  loadTagList && loadTagList();
+};
+
+// URLパラメータから内容を読み込んで自動表示
+window.onload = () => {
+  // URLパラメータの取得
+  const params = new URLSearchParams(location.search);
+  if (params.has('title') || params.has('content') || params.has('tags')) {
+    document.getElementById('titleInput').value = decodeURIComponent(params.get('title') || '');
+    document.getElementById('contentInput').value = decodeURIComponent(params.get('content') || '');
+    document.getElementById('tagInput').value = decodeURIComponent(params.get('tags') || '');
+  }
+  loadMemoList();
+  loadTagList && loadTagList();
+};
