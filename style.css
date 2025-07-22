@@ -6,8 +6,22 @@
 
 body.dark {
   --bg-color: #121212;
-  --text-color: #e0e0e0;
-  --highlight: #1e1e1e;
+  --text-color: #eeeeee;
+  --highlight: #1d1d1d;
+}
+
+.memo-title {
+  color: var(--text-color);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.memo-entry button {
+  color: var(--text-color);
+  background: transparent;
+  border: none;
 }
 
 body {
@@ -150,17 +164,30 @@ button:hover {
     height: calc(100vh - 100px);
     overflow-y: auto;
   }
-  .memo-entry {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px;
-  }
-  .memo-entry button {
-    font-size: 18px;
-    margin-left: 4px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-  }
+.memo-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--highlight);
+}
+
+.memo-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.memo-entry button {
+  flex-shrink: 0;
+  font-size: 16px;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  color: var(--text-color);
+}
 }
