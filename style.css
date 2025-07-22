@@ -115,3 +115,37 @@ button {
 button:hover {
   background-color: #bbb;
 }
+
+.mobile-toggle {
+  display: none;
+  padding: 10px;
+  text-align: center;
+  background-color: var(--highlight);
+}
+.mobile-toggle button {
+  margin: 0 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #ddd;
+  transition: background-color 0.3s;
+}
+.mobile-toggle button.active {
+  background-color: var(--text-color);
+  color: var(--bg-color);
+}
+
+@media (max-width: 600px) {
+  .mobile-toggle {
+    display: block;
+  }
+  #sidebar, #editor {
+    width: 100%;
+    display: none;
+  }
+  #sidebar.show, #editor.show {
+    display: block;
+  }
+}
