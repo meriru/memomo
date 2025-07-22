@@ -71,12 +71,16 @@ function getMemoInput() {
 
 function saveMemo(isAutoSave = false) {
   const { title, content, tags } = getMemoInput();
+
   if (!title && !content && !isAutoSave) {
     alert('空のメモは保存できません');
     return;
   }
 
-  if (!title && !content && isAutoSave) return;
+  // ⚠ 自動保存時は未選択メモ（新規）には保存しない
+  if (!selectedKey && isAutoSave) {
+    return;
+  }
 
   const key = selectedKey || `memo_${Date.now()}`;
   const memo = {
@@ -94,8 +98,6 @@ function saveMemo(isAutoSave = false) {
     clearEditor();
     loadMemoList();
     alert('保存しました！');
-
-    // ✅ ＜ここ＞スマホなら保存後に一覧へ戻る
     if (window.innerWidth <= 600) showList();
   } else {
     showAutoSaveMsg('自動保存しました');
